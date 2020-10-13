@@ -3,8 +3,10 @@ from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from models import setup_db, Movie, Actor
+from auth import AuthError, requires_auth
 
 def create_app(test_config=None):
+  
   # configration
   # ------------------------------------------------------
   app = Flask(__name__)
@@ -24,8 +26,16 @@ def create_app(test_config=None):
   # Index 
   # ------------------------------------------------------
   @app.route('/')
-  def hello():
-      return jsonify({'message': 'Hello World'})
+  @requires_auth()
+  def index():
+    # token = request.args.get('access_token')
+    message = 'Welcome To Index' 
+    # if not token:
+    #   message += ' Your Token is:' + token 
+    # access_token
+    return jsonify({
+      'message': message
+    })
 
   # ------------------------------------------------------
   # Movies
@@ -40,6 +50,21 @@ def create_app(test_config=None):
     return jsonify({
       'success': True,
       'movies': [movie.format() for movie in movies]
+    }), 200
+
+  # GET Movie By ID
+  # ------------------------------------------------------
+  @app.route('/movies/<int:id>', methods=['GET'])
+  def get_movie(id):
+
+    movie = Movie.query.get(id)
+
+    if movie is None:
+        abort(404)
+
+    return jsonify({
+        'movie': movie.format(),
+        'success': True
     }), 200
 
   # POST New Movie
@@ -115,6 +140,21 @@ def create_app(test_config=None):
     return jsonify({
       'success': True,
       'actors': [actor.format() for actor in actors]
+    }), 200
+
+  # GET Actor By ID
+  # ------------------------------------------------------
+  @app.route('/actors/<int:id>', methods=['GET'])
+  def get_actor(id):
+
+    actor = Actor.query.get(id)
+
+    if actor is None:
+      abort(404)
+
+    return jsonify({
+        'actor': actor.format(),
+        'success': True
     }), 200
 
   # POST New Actor
@@ -239,19 +279,22 @@ def create_app(test_config=None):
           'message': 'Internal server error',
       }), 500
 
+  # Auth  Error 
+  # ------------------------------------------------------
+
+  @app.errorhandler(AuthError)
+  def auth_error(error):
+      return jsonify({
+          'success': False,
+          'error': error.status_code,
+          'message': error.error['description'],
+      }), error.status_code
+
   return app
 
 
 
-# @app.errorhandler(AuthError)
-# def auth_error(error):
-#     return jsonify({
-#         'success': False,
-#         'error': error.status_code,
-#         'message': error.error['description'],
-#     }), error.status_code
-
 APP = create_app()
 
 if __name__ == '__main__':
-    APP.run(host='0.0.0.0', port=8080, debug=True)
+  APP.run(host='0.0.0.0', port=8080, debug=True)
