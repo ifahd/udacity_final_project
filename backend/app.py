@@ -26,7 +26,6 @@ def create_app(test_config=None):
   # Index 
   # ------------------------------------------------------
   @app.route('/')
-  @requires_auth()
   def index():
     # token = request.args.get('access_token')
     message = 'Welcome To Index' 
@@ -34,7 +33,8 @@ def create_app(test_config=None):
     #   message += ' Your Token is:' + token 
     # access_token
     return jsonify({
-      'message': message
+      'message': message,
+      'token': request.authorization
     })
 
   # ------------------------------------------------------
