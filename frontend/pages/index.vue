@@ -1,19 +1,6 @@
 <template>
 <div>
 <div>
-  <b-navbar toggleable="lg" type="dark" variant="info">
-    <b-navbar-brand href="/">Casting Agency</b-navbar-brand>
-      <b-navbar-nav>
-        <template v-if="$auth.loggedIn">
-          <b-nav-item href="/movies">Movies</b-nav-item>
-          <b-nav-item href="/actors">Actors</b-nav-item>
-          <b-nav-item href="/logout" class="ml-2">Logout</b-nav-item>
-        </template>
-        <template v-else>
-          <b-nav-item href="/login" class="ml-2">Login</b-nav-item>
-        </template>
-      </b-navbar-nav>
-  </b-navbar>
 </div>
   <div class="container">
     <div>

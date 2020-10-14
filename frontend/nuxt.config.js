@@ -24,6 +24,7 @@ export default {
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [
+    '~/plugins/mixins/permissions',
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
@@ -32,7 +33,7 @@ export default {
   // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
   buildModules: [
     '@nuxtjs/axios',
-    '@nuxtjs/auth'
+    '@nuxtjs/auth',
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)
@@ -40,17 +41,13 @@ export default {
     // https://go.nuxtjs.dev/bootstrap
     'bootstrap-vue/nuxt',
   ],
-  auth: {
-    strategies: {
-      local: false,
-      auth0: {
-        domain: process.env.AUTH0_DOMAIN,
-        client_id: process.env.AUTH0_CLIENT_ID
-      }
-    }
+  axios: {
+    baseURL: 'http://127.0.0.1:5000',
   },
-
   auth: {
+    plugins: [
+      '~/plugins/auth.js'
+    ],
     redirect: {
       login: '/login', // redirect user when not connected
       callback: '/callback',
@@ -61,7 +58,11 @@ export default {
       auth0: {
         domain: process.env.AUTH0_DOMAIN,
         client_id: process.env.AUTH0_CLIENT_ID,
-        audience: process.env.AUTH0_AUDIENCE
+        audience: process.env.AUTH0_AUDIENCE,
+        scope: ['openid', 'profile', 'email', 'offline_access'],
+        responseType: 'code',
+        grantType: 'authorization_code',
+        codeChallengeMethod: 'S256',
       }
     }
   },
@@ -72,5 +73,10 @@ export default {
     middleware: [
       'auth'
     ]
+  },
+  env: {
+    AUTH0_DOMAIN: "dev-fahd.us.auth0.com",
+    AUTH0_CLIENT_ID: "xcLdyXKRTN4nawQUo1HWOTKSoJB0eNMh",
+    AUTH0_AUDIENCE: "Final Project API"
   }
 }

@@ -3,7 +3,7 @@ from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from models import setup_db, Movie, Actor
-from auth import AuthError, requires_auth
+from auth import AuthError, requires_auth, get_token_auth_header, verify_decode_jwt
 
 def create_app(test_config=None):
   
@@ -37,6 +37,18 @@ def create_app(test_config=None):
       'token': request.authorization
     })
 
+  # Get Permission
+  # ------------------------------------------------------
+  @app.route('/permissions')
+  def get_permissions():
+    token = get_token_auth_header()
+    permissions = verify_decode_jwt(token)
+    # permissions = get_permissions()
+    return jsonify({
+      'permissions': permissions['permissions'],
+      # 'token': token,
+      # 'token': request.authorization
+    })
   # ------------------------------------------------------
   # Movies
   # ------------------------------------------------------
