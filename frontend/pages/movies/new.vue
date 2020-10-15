@@ -12,7 +12,6 @@
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
-
     </div>
 </template>
 
@@ -27,10 +26,19 @@ export default {
   methods: {
     newMovie(e) {
       e.preventDefault()
-      this.$store.dispatch('movies/new', this.form)
+      this.$store.dispatch('movies/create', this.form)
       .then((res) => {
-        console.log('res = ', res);
+        this.$Toast.fire({
+          icon: 'success',
+          title: 'Created successfully'
+        })
+        this.form = {
+            title: null,
+            release_date: null
+        }
+        this.$router.push({ name: 'movies' })
       })
+
     }
   },
 }

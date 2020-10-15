@@ -1,42 +1,42 @@
 const state = () => ({
-  movies: [],
-  movie: {},
+  actors: [],
+  actor: {},
 })
 
 const getters = {
-  movies (state) {
-    return state.movies
+  actors (state) {
+    return state.actors
   },
-  movie (state) {
-    return state.movie
+  actor (state) {
+    return state.actor
   }
 }
 
 const mutations = {
-  movies (state, payload) {
-    state.movies = payload
+  actors (state, payload) {
+    state.actors = payload
   },
-  movie (state, payload) {
-    state.movie = payload
+  actor (state, payload) {
+    state.actor = payload
   }
 }
 
 const actions = {
   all (context) {
-    this.$axios.$get('/movies')
+    this.$axios.$get('/actors')
       .then((res) => {
-        context.commit('movies', res.movies)
+        context.commit('actors', res.actors)
       })
   },
   get (context, id) {
-    this.$axios.$get('/movies/' + id)
+    this.$axios.$get('/actors/' + id)
       .then((res) => {
-        context.commit('movie', res.movie)
+        context.commit('actor', res.actor)
       })
   },
   create (context, payload) {
     return new Promise((resolve, reject) => {
-      this.$axios.$post('/movies', payload)
+      this.$axios.$post('/actors', payload)
         .then((res) => {
           resolve(res)
         })
@@ -47,7 +47,7 @@ const actions = {
   },
   update (context, payload) {
     return new Promise((resolve, reject) => {
-      this.$axios.$patch('/movies/' + payload.id, payload)
+      this.$axios.$patch('/actors/' + payload.id, payload)
         .then((res) => {
           resolve(res)
         })

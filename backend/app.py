@@ -122,6 +122,7 @@ def create_app(test_config=None):
   # DELETE Movie By ID
   # ------------------------------------------------------
   @app.route('/movies/<int:id>', methods=['DELETE'])
+  @requires_auth('delete:movies')
   def delete_movie(id):
       
     movie = Movie.query.get(id)
@@ -306,7 +307,12 @@ def create_app(test_config=None):
 
 
 
-APP = create_app()
+app = create_app()
 
 if __name__ == '__main__':
-  APP.run(host='0.0.0.0', port=8080, debug=True)
+    app.run()
+
+# app = create_app()
+
+# if __name__ == '__main__':
+#   app.run(host='0.0.0.0', port=8080, debug=True)
