@@ -2,7 +2,7 @@
   <div>
     <div class="container pt-5">
       <h1>Actors</h1>
-      <a class="btn btn-primary" href="/actors/new">New Actor</a>
+      <a class="btn btn-primary" href="/actors/new" v-if="permissions.includes('create:actors')">New Actor</a>
       <table class="table table-bordered mt-2">
         <thead>
           <tr>

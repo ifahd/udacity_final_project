@@ -27,14 +27,9 @@ def create_app(test_config=None):
   # ------------------------------------------------------
   @app.route('/')
   def index():
-    # token = request.args.get('access_token')
-    message = 'Welcome To Index' 
-    # if not token:
-    #   message += ' Your Token is:' + token 
-    # access_token
+    message = 'Welcome To Final App Developer by Fahd Alrashedi' 
     return jsonify({
       'message': message,
-      'token': request.authorization
     })
 
   # Get Permission
@@ -43,11 +38,8 @@ def create_app(test_config=None):
   def get_permissions():
     token = get_token_auth_header()
     permissions = verify_decode_jwt(token)
-    # permissions = get_permissions()
     return jsonify({
-      'permissions': permissions['permissions'],
-      # 'token': token,
-      # 'token': request.authorization
+      'permissions': permissions['permissions']
     })
   # ------------------------------------------------------
   # Movies
@@ -56,6 +48,7 @@ def create_app(test_config=None):
   # GET All Movies 
   # ------------------------------------------------------
   @app.route('/movies')
+  @requires_auth('read:movies')
   def get_movies():
     movies = Movie.query.all()
 
@@ -67,6 +60,7 @@ def create_app(test_config=None):
   # GET Movie By ID
   # ------------------------------------------------------
   @app.route('/movies/<int:id>', methods=['GET'])
+  @requires_auth('read:movies')
   def get_movie(id):
 
     movie = Movie.query.get(id)
@@ -82,6 +76,7 @@ def create_app(test_config=None):
   # POST New Movie
   # ------------------------------------------------------
   @app.route('/movies', methods=['POST'])
+  @requires_auth('create:movies')
   def post_movie():
 
     title = request.get_json()['title']
@@ -99,6 +94,7 @@ def create_app(test_config=None):
   # PATCH Movie By ID
   # ------------------------------------------------------
   @app.route('/movies/<int:id>', methods=['PATCH'])
+  @requires_auth('update:movies')
   def update_movie(id):
 
     movie = Movie.query.get(id)
@@ -147,6 +143,7 @@ def create_app(test_config=None):
   # GET All Actors 
   # ------------------------------------------------------
   @app.route('/actors')
+  @requires_auth('read:actors')
   def get_actors():
     actors = Actor.query.all()
 
@@ -158,6 +155,7 @@ def create_app(test_config=None):
   # GET Actor By ID
   # ------------------------------------------------------
   @app.route('/actors/<int:id>', methods=['GET'])
+  @requires_auth('read:actors')
   def get_actor(id):
 
     actor = Actor.query.get(id)
@@ -173,6 +171,7 @@ def create_app(test_config=None):
   # POST New Actor
   # ------------------------------------------------------
   @app.route('/actors', methods=['POST'])
+  @requires_auth('create:actors')
   def post_actor():
 
     name = request.get_json()['name']
@@ -195,6 +194,7 @@ def create_app(test_config=None):
   # PATCH Actors By ID
   # ------------------------------------------------------
   @app.route('/actors/<int:id>', methods=['PATCH'])
+  @requires_auth('update:actors')
   def update_actor(id):
 
     actor = Actor.query.get(id)
@@ -221,6 +221,7 @@ def create_app(test_config=None):
   # DELETE Actors By ID
   # ------------------------------------------------------
   @app.route('/actors/<int:id>', methods=['DELETE'])
+  @requires_auth('delete:actors')
   def delete_actor(id):
       
     actor = Actor.query.get(id)
@@ -311,8 +312,3 @@ app = create_app()
 
 if __name__ == '__main__':
     app.run()
-
-# app = create_app()
-
-# if __name__ == '__main__':
-#   app.run(host='0.0.0.0', port=8080, debug=True)

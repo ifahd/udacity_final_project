@@ -2,7 +2,7 @@
   <div>
     <div class="container pt-5">
       <h1>Actor: {{ actor.name }}</h1>
-      <router-link :to="{name: 'actors-edit-id', params: { id: actor.id }}" class="btn btn-primary">
+      <router-link :to="{name: 'actors-edit-id', params: { id: actor.id }}" class="btn btn-primary" v-if="permissions.includes('read:actors')">
         Edit
       </router-link>
       <table class="table table-bordered mt-2">

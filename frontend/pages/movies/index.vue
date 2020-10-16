@@ -2,7 +2,7 @@
   <div>
     <div class="container pt-5">
       <h1>Movies</h1>
-      <a class="btn btn-primary" href="/movies/new">New Movie</a>
+      <a class="btn btn-primary" href="/movies/new" v-if="permissions.includes('create:movies')">New Movie</a>
       <table class="table table-bordered mt-2">
         <thead>
           <tr>
