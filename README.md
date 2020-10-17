@@ -21,7 +21,3 @@ All permissions a Casting Director has and delete a movie from the database.
 - casting.assistant@test.com **(Role: Casting Assistant)**
 - casting.director@test.com **(Role: Casting Director)**
 - executive.producer@test.com **(Role: Executive Producer)**
-### Password for all account:
-```
-Aa123456
-```
