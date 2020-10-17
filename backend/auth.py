@@ -1,3 +1,4 @@
+import os
 import json
 from flask import request, _request_ctx_stack
 from functools import wraps
@@ -6,12 +7,14 @@ from urllib.request import urlopen
 
 # Static data
 # ------------------------------------------------------
-AUTH0_DOMAIN = 'dev-fahd.us.auth0.com'
-ALGORITHMS = ['RS256']
-API_AUDIENCE = 'Final Project API'
-# https://dev-fahd.us.auth0.com/authorize?audience=Final Project API&response_type=token&client_id=xcLdyXKRTN4nawQUo1HWOTKSoJB0eNMh&redirect_uri=http://localhost:5000
+AUTH0_DOMAIN = os.environ['AUTH0_DOMAIN']
+ALGORITHMS = os.environ['ALGORITHMS']
+API_AUDIENCE = os.environ['API_AUDIENCE']
+
 # AuthError Exception
 # ------------------------------------------------------
+
+
 class AuthError(Exception):
     def __init__(self, error, status_code):
         self.error = error
@@ -52,14 +55,16 @@ def get_token_auth_header():
     token = parts[1]
     return token
 
-# Check permission 
+# Check permission
 # ------------------------------------------------------
+
+
 def check_permissions(permission, payload):
     if 'permissions' not in payload:
-                        raise AuthError({
-                            'code': 'invalid_claims',
-                            'description': 'Permissions not included in JWT.'
-                        }, 400)
+        raise AuthError({
+            'code': 'invalid_claims',
+            'description': 'Permissions not included in JWT.'
+        }, 400)
 
     if permission not in payload['permissions']:
         raise AuthError({
@@ -70,6 +75,8 @@ def check_permissions(permission, payload):
 
 # Verify decode jwt
 # ------------------------------------------------------
+
+
 def verify_decode_jwt(token):
     jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
     jwks = json.loads(jsonurl.read())
@@ -119,12 +126,14 @@ def verify_decode_jwt(token):
                 'description': 'Unable to parse authentication token.'
             }, 400)
     raise AuthError({
-                'code': 'invalid_header',
+        'code': 'invalid_header',
                 'description': 'Unable to find the appropriate key.'
-            }, 400)
+    }, 400)
 
 # Requires auth (use it at the endpoint if needit)
 # ------------------------------------------------------
+
+
 def requires_auth(permission=''):
     def requires_auth_decorator(f):
         @wraps(f)
